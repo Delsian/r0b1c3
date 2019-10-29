@@ -50,3 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+.settings
+/Fw/SDK_16/nRF_MDK_8_27_0_IAR_NordicLicense.msi
+/Fw/SDK_16/examples
+/Fw/SDK_16/external/lwip
+/Fw/SDK_16/external/freertos
+/Fw/SDK_16/nRF_MDK_8_27_0_Keil4_NordicLicense.msi

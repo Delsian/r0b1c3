@@ -9,6 +9,4 @@ MEMORY
   RAM (rwx) :  ORIGIN = 0x20002300, LENGTH = 0x3dd00
 }
 
-} INSERT AFTER .data;
-
 INCLUDE "nrf52.ld"

@@ -7,6 +7,7 @@ SET(SDK_LIB_INCLUDE_DIRS
     ${SDK_LIB_DIR}atomic_fifo
     ${SDK_LIB_DIR}atomic_flags
     ${SDK_LIB_DIR}balloc
+    ${SDK_LIB_DIR}button
     ${SDK_LIB_DIR}crc32
     ${SDK_LIB_DIR}crc16
     ${SDK_LIB_DIR}csense
@@ -16,7 +17,7 @@ SET(SDK_LIB_INCLUDE_DIRS
     ${SDK_LIB_DIR}experimental_section_vars
     ${SDK_LIB_DIR}experimental_task_manager
     ${SDK_LIB_DIR}fds
-    ${SDK_LIB_DIR}fstorage
+    ${SDK_LIB_DIR}fstorage                	
     ${SDK_LIB_DIR}hardfault
     ${SDK_LIB_DIR}log
     ${SDK_LIB_DIR}log/src
@@ -74,9 +75,11 @@ SET(SDK_BLE_INCLUDE_DIRS
 	${SDK_BLE_DIR}ble_services/ble_dfu
 	${SDK_BLE_DIR}ble_services/ble_dis
 	${SDK_BLE_DIR}ble_services/ble_escs
+	${SDK_BLE_DIR}ble_services/ble_lbs
 	${SDK_BLE_DIR}ble_services/ble_nus
 	${SDK_BLE_DIR}common
 	${SDK_BLE_DIR}nrf_ble_gatt
+	${SDK_BLE_DIR}nrf_ble_gq
 	${SDK_BLE_DIR}nrf_ble_qwr
 	${SDK_BLE_DIR}peer_manager
 	)
@@ -89,6 +92,7 @@ SET(SDK_INCLUDE_DIRS
     ${SDK_DIR}/external/nano-pb
     ${SDK_DIR}/external/utf_converter
     ${SDK_DIR}/integration/nrfx/legacy
+    ${SDK_DIR}/integration/nrfx
     ${SDK_MOD_DIR}
     ${SDK_MOD_DIR}drivers
     ${SDK_MOD_DIR}drivers/include
@@ -295,6 +299,7 @@ SET(SDK_BLE_SOURCES
     ${SDK_BLE_DIR}common/ble_conn_state.c
     ${SDK_BLE_DIR}common/ble_srv_common.c
     ${SDK_BLE_DIR}nrf_ble_gatt/nrf_ble_gatt.c
+    ${SDK_BLE_DIR}nrf_ble_gq/nrf_ble_gq.c
     ${SDK_BLE_DIR}nrf_ble_qwr/nrf_ble_qwr.c
     ${SDK_BLE_DIR}ble_services/ble_bas/ble_bas.c
     ${SDK_BLE_DIR}ble_services/ble_dfu/ble_dfu.c

@@ -56,7 +56,10 @@ dkms.conf
 /Fw/SDK_16/external/lwip
 /Fw/SDK_16/external/freertos
 /Fw/SDK_16/nRF_MDK_8_27_0_Keil4_NordicLicense.msi
-/Fw/controller/CMakeFiles
-/Fw/controller/cmake_install.cmake
-/Fw/controller/CMakeCache.txt
-/Fw/controller/Makefile
+CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+.project
+.cproject
+*.bin

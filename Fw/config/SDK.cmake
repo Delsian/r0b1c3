@@ -62,6 +62,7 @@ SET(SDK_CRYPTO_INCLUDE_DIRS
     ${SDK_DIR}/external/mbedtls/include
     ${SDK_DIR}/external/micro-ecc/micro-ecc
     ${SDK_DIR}/external/nrf_cc310/include
+    ${SDK_DIR}/external/nrf_cc310_bl/include
     ${SDK_DIR}/external/nrf_oberon
     ${SDK_DIR}/external/nrf_oberon/include
     ${SDK_DIR}/external/nrf_tls/mbedtls/nrf_crypto/config
@@ -180,6 +181,11 @@ SET(SDK_BOOT_SOURCES
     ${SDK_LIB_DIR}crypto/nrf_crypto_ecdsa.c
     ${SDK_LIB_DIR}crypto/nrf_crypto_hash.c
     ${SDK_LIB_DIR}crypto/nrf_crypto_shared.c
+    ${SDK_LIB_DIR}crypto/backend/cc310_bl/cc310_bl_backend_ecc.c
+    ${SDK_LIB_DIR}crypto/backend/cc310_bl/cc310_bl_backend_ecdsa.c
+    ${SDK_LIB_DIR}crypto/backend/cc310_bl/cc310_bl_backend_hash.c
+    ${SDK_LIB_DIR}crypto/backend/cc310_bl/cc310_bl_backend_init.c
+    ${SDK_LIB_DIR}crypto/backend/cc310_bl/cc310_bl_backend_shared.c
     ${SDK_LIB_DIR}crypto/backend/oberon/oberon_backend_ecc.c
     ${SDK_LIB_DIR}crypto/backend/oberon/oberon_backend_hash.c
     ${SDK_LIB_DIR}crypto/backend/oberon/oberon_backend_chacha_poly_aead.c
@@ -202,7 +208,7 @@ SET(SDK_CRYPTO_SOURCES
     ${SDK_LIB_DIR}crypto/nrf_crypto_hmac.c
     ${SDK_LIB_DIR}crypto/nrf_crypto_hkdf.c
     ${SDK_LIB_DIR}crypto/nrf_crypto_rng.c   
-    ${SDK_LIB_DIR}/crypto/backend/cifra/cifra_backend_aes_aead.c
+    ${SDK_LIB_DIR}crypto/backend/cifra/cifra_backend_aes_aead.c
     ${SDK_LIB_DIR}crypto/backend/mbedtls/mbedtls_backend_aes.c
     ${SDK_LIB_DIR}crypto/backend/mbedtls/mbedtls_backend_ecc.c
     ${SDK_LIB_DIR}crypto/backend/mbedtls/mbedtls_backend_aes_aead.c

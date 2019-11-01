@@ -18,8 +18,8 @@
 
 // Components
 #include "boards.h"
-//#include "control.h"
-//#include "custom_service.h"
+#include "control.h"
+#include "custom_service.h"
 //#include "localfds.h"
 
 static void clock_irq_handler(nrfx_clock_evt_type_t evt)
@@ -54,7 +54,7 @@ int main(void)
     NRF_LOG_INFO("main()");
 
     HwInit();
-    //ControlInit();
+    ControlInit();
     ble_stack_init();
 
 	while (1)

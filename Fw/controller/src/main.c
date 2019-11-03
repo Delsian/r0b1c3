@@ -27,13 +27,37 @@ static void clock_irq_handler(nrfx_clock_evt_type_t evt)
 
 }
 
+// Copied from board.c
+static void gpio_output_voltage_setup(void)
+{
+    // Configure UICR_REGOUT0 register only if it is set to default value.
+    if ((NRF_UICR->REGOUT0 & UICR_REGOUT0_VOUT_Msk) ==
+        (UICR_REGOUT0_VOUT_DEFAULT << UICR_REGOUT0_VOUT_Pos))
+    {
+        NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Wen;
+        while (NRF_NVMC->READY == NVMC_READY_READY_Busy){}
+
+        NRF_UICR->REGOUT0 = (NRF_UICR->REGOUT0 & ~((uint32_t)UICR_REGOUT0_VOUT_Msk)) |
+                            (UICR_REGOUT0_VOUT_3V3 << UICR_REGOUT0_VOUT_Pos);
+
+        NRF_NVMC->CONFIG = NVMC_CONFIG_WEN_Ren;
+        while (NRF_NVMC->READY == NVMC_READY_READY_Busy){}
+
+        // System reset is needed to update UICR registers.
+        NVIC_SystemReset();
+    }
+}
+
 static void HwInit(void)
 {
 	ret_code_t err_code;
 
+	/* Set system voltage */
+	gpio_output_voltage_setup();
+
 	/* Enable power switch */
-	nrf_gpio_cfg_output(22);
-	nrf_gpio_pin_set(22);
+	nrf_gpio_cfg_output(26);
+	nrf_gpio_pin_set(26);
 
     /* initializing the Power manager. */
     err_code = nrf_pwr_mgmt_init();

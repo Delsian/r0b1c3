@@ -18,7 +18,7 @@ SET(TOOLCHAIN_LIB_DIR ${TOOLCHAIN_LIBC_DIR}/usr/lib)
 
 set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 
-set(OBJCOPY ${TOOLCHAIN_NAME}-objcopy)
+set(CMAKE_OBJCOPY ${TOOLCHAIN_NAME}-objcopy)
 set(MERGEHEX mergehex)
 
 set(CMAKE_C_COMPILER_WORKS 1)
@@ -76,13 +76,7 @@ SET(NRF52_SYSTEM ${SDK_DIR}/modules/nrfx/mdk/system_nrf52.c)
 SET(SOFTDEVICE_PATH "${SDK_SD_DIR}hex/s140_nrf52_7.0.1_softdevice.hex")
 
 # Utilities
-if (NOT "$ENV{NRFJPROG_DIR}" STREQUAL "")
-	set(NRFJPROG_DIR "$ENV{NRFJPROG_DIR}" CACHE INTERNAL "NRFJPROG_DIR - Copied from environment variable")
-else()
-	message("var NRFJPROG_DIR not set, use default")
-	set(NRFJPROG_DIR /opt/nrfjprog/nrfjprog)
-endif()
-SET(NRFJPROG ${NRFJPROG_DIR}/nrfjprog)
+SET(NRFJPROG nrfjprog)
 SET(NRFUTIL ${SDK_DIR}/external_tools/nrfutil.exe)
 
 # Bootloader settings

@@ -24,6 +24,14 @@ extern "C" {
 #define PINA_TOUCHXR            NRF_SAADC_INPUT_AIN5
 #define PINA_TOUCHYD            NRF_SAADC_INPUT_AIN6
 
+//===== TFT ILI9341
+#define PIN_TFTRESET         13
+#define PIN_TFTCLK           15
+#define PIN_TFTDC            17
+#define PIN_TFTCS            24
+#define PIN_TFTMOSI          20
+#define PIN_TFTMISO          7
+
 //===== Not used
 
 #define RX_PIN_NUMBER  11

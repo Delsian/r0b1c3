@@ -56,8 +56,8 @@ static void HwInit(void)
 	gpio_output_voltage_setup();
 
 	/* Enable power switch */
-	//nrf_gpio_cfg_output(26);
-	//nrf_gpio_pin_set(26);
+	nrf_gpio_cfg_output(26);
+	nrf_gpio_pin_set(26);
 
     /* initializing the Power manager. */
     err_code = nrf_pwr_mgmt_init();

@@ -12,8 +12,8 @@
 
 void TouchInit(void) {
     nrf_gpio_cfg_output(PIN_TOUCHXL);
-    nrf_gpio_pin_set(PIN_TOUCHXL);
+    nrf_gpio_pin_clear(PIN_TOUCHXL);
     nrf_gpio_cfg_output(PIN_TOUCHXR);
-    nrf_gpio_pin_clear(PIN_TOUCHXR);
+    nrf_gpio_pin_set(PIN_TOUCHXR);
 
 }

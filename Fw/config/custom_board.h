@@ -12,54 +12,17 @@ extern "C" {
 #define BUTTONS_NUMBER 0
 #define BUTTON_PULL    NRF_GPIO_PIN_PULLUP
 
-#define TWI0_SCL		6
-#define TWI0_SDA		7
 
-#define BUZZER_PWM		8
-#define PWR_ON			27
-#define BUTTON1     	28
-#define PIN_CHRG		29
-#define PIN_STDBY		22
-#define MPU_INT			20
+//=== Touchscreen inputs:
+#define PIN_TOUCHXL         31
+#define PIN_TOUCHYU         2
+#define PIN_TOUCHXR         29
+#define PIN_TOUCHYD         30
 
-//=== External outputs
-#define PIN_EXT0		11
-#define PIN_EXT1		12
-#define PIN_EXT2		13
-#define PIN_EXT3		14
-#define PIN_EXT4		15
-#define PIN_EXT5		16
-#define PIN_EXT6		17
-#define PIN_EXT7		19
-
-//=== Analog inputs
-#define AM0_AIN			NRF_SAADC_INPUT_AIN0
-#define AM1_AIN			NRF_SAADC_INPUT_AIN1
-#define AM2_AIN			NRF_SAADC_INPUT_AIN6
-#define AM3_AIN			NRF_SAADC_INPUT_AIN7
-#define VBAT_AIN		NRF_SAADC_INPUT_AIN2
-
-
-//=== PCA config ===
-#define PCA9685_LEDR				14
-#define PCA9685_LEDG				13
-#define PCA9685_LEDB				15
-
-#define PCA9685_PWMA				0
-#define PCA9685_IN1A				2
-#define PCA9685_IN2A				1
-
-#define PCA9685_PWMB				5
-#define PCA9685_IN1B				3
-#define PCA9685_IN2B				4
-
-#define PCA9685_PWMC				6
-#define PCA9685_IN1C				8
-#define PCA9685_IN2C				7
-
-#define PCA9685_PWMD				11
-#define PCA9685_IN1D				9
-#define PCA9685_IN2D				10
+#define PINA_TOUCHXL			NRF_SAADC_INPUT_AIN7
+#define PINA_TOUCHYU			NRF_SAADC_INPUT_AIN0
+#define PINA_TOUCHXR            NRF_SAADC_INPUT_AIN5
+#define PINA_TOUCHYD            NRF_SAADC_INPUT_AIN6
 
 //===== Not used
 

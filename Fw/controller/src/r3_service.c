@@ -7,13 +7,14 @@
 #include "custom_service.h"
 #include "control.h"
 #include "nrf_log.h"
+#include "touchscreen.h"
 
 tCharVars tCharCoordHandle;
 
 static tCustomServiceVars tR3Device;
 
 static void InitComplete() {
-
+    TouchInit();
 }
 
 const tCustomService tServDev = {

@@ -28,6 +28,7 @@ SET(SOURCE_FILES
 	src/custom_service.c
 	src/control.c
 	src/r3_service.c
+        src/touchscreen.c
 	)
 
 SET(COMPILE_DEFINITIONS_DEBUG -O0 -g3 -DDEBUG)

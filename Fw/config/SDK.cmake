@@ -149,6 +149,7 @@ SET(SDK_LIB_SOURCES
     ${SDK_DIR}/external/utf_converter/utf.c
     ${SDK_DIR}/integration/nrfx/legacy/nrf_drv_rng.c
     ${SDK_DIR}/integration/nrfx/legacy/nrf_drv_twi.c
+    ${SDK_DIR}/integration/nrfx/legacy/nrf_drv_ppi.c
     )
 
 SET(SDK_BOOT_SOURCES

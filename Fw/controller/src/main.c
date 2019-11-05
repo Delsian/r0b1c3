@@ -10,6 +10,7 @@
 #include "nrf_soc.h"
 #include "nrf_clock.h"
 #include "nrf_drv_clock.h"
+#include "nrf_drv_ppi.h"
 #include "nrf_delay.h"
 #include "nrf_gpio.h"
 #include "nrf_log.h"
@@ -54,6 +55,9 @@ static void HwInit(void)
 
 	/* Set system voltage */
 	gpio_output_voltage_setup();
+
+    err_code = nrf_drv_ppi_init();
+    APP_ERROR_CHECK(err_code);
 
 	/* Enable power switch */
 	nrf_gpio_cfg_output(26);

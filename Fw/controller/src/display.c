@@ -12,6 +12,7 @@
 #include "nrf.h"
 #include "nrf_gfx.h"
 #include "nrf_delay.h"
+#include "display.h"
 
 #define GRAY            0xC618
 #define RED             0xF800
@@ -63,9 +64,19 @@ void DisplayInit(void)
     nrf_gpio_cfg_output(ILI9341_RES_PIN);
     nrf_gpio_pin_set(ILI9341_RES_PIN);
     APP_ERROR_CHECK(nrf_gfx_init(p_lcd));
-    nrf_gfx_screen_fill(p_lcd, GRAY);
-    nrf_delay_ms(200);
-    line_draw();
 }
 
+void DispTest(void) {
+    nrf_gfx_screen_fill(p_lcd, GRAY);
+    nrf_delay_ms(200);
+    //line_draw();
+    DispCursor(150, 150);
+}
 
+void DispCursor(int x, int y) {
+    nrf_gfx_line_t line1 = NRF_GFX_LINE(x-9, y, x+11, y, 3);
+    nrf_gfx_line_t line2 = NRF_GFX_LINE(x, y-9, x, y+11, 3);
+    nrf_gfx_line_draw(p_lcd, &line1, RED);
+    nrf_gfx_line_draw(p_lcd, &line2, RED);
+
+}

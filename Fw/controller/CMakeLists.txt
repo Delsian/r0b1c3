@@ -28,7 +28,11 @@ SET(SOURCE_FILES
 	src/custom_service.c
 	src/control.c
 	src/r3_service.c
-        src/touchscreen.c
+    src/touchscreen.c
+    src/display.c
+    ${SDK_DIR}/components/drivers_ext/ili9341/ili9341.c
+    ${SDK_DIR}/external/thedotfactory_fonts/orkney8pts.c
+    ${SDK_DIR}/external/thedotfactory_fonts/orkney24pts.c
 	)
 
 SET(COMPILE_DEFINITIONS_DEBUG -O0 -g3 -DDEBUG)
@@ -50,7 +54,8 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}.elf
 	${SOURCE_FILES}
 	${SDK_LIB_SOURCES}
 	${SDK_BLE_SOURCES}
-	${SDK_MOD_DRV_SOURCES}
+    ${SDK_MOD_DRV_SOURCES}
+    ${SDK_LEGACY_SOURCES}
 	${NRF52_SYSTEM}
 	${SDK_EXT_FPRINTF_SOURCES}
 	${SDK_LOG_SOURCES}

@@ -17,7 +17,8 @@ SET(SDK_LIB_INCLUDE_DIRS
     ${SDK_LIB_DIR}experimental_section_vars
     ${SDK_LIB_DIR}experimental_task_manager
     ${SDK_LIB_DIR}fds
-    ${SDK_LIB_DIR}fstorage                	
+    ${SDK_LIB_DIR}fstorage
+    ${SDK_LIB_DIR}gfx
     ${SDK_LIB_DIR}hardfault
     ${SDK_LIB_DIR}log
     ${SDK_LIB_DIR}log/src
@@ -91,6 +92,7 @@ SET(SDK_INCLUDE_DIRS
     ${SDK_DIR}/external/segger_rtt
     ${SDK_DIR}/external/fprintf
     ${SDK_DIR}/external/nano-pb
+    ${SDK_DIR}/external/thedotfactory_fonts
     ${SDK_DIR}/external/utf_converter
     ${SDK_DIR}/integration/nrfx/legacy
     ${SDK_DIR}/integration/nrfx
@@ -127,6 +129,7 @@ SET(SDK_LIB_SOURCES
     ${SDK_LIB_DIR}fstorage/nrf_fstorage.c
     ${SDK_LIB_DIR}fstorage/nrf_fstorage_nvmc.c
     ${SDK_LIB_DIR}fstorage/nrf_fstorage_sd.c
+    ${SDK_LIB_DIR}gfx/nrf_gfx.c
     ${SDK_LIB_DIR}hardfault/hardfault_implementation.c
     ${SDK_LIB_DIR}hardfault/nrf52/handler/hardfault_handler_gcc.c
     ${SDK_LIB_DIR}memobj/nrf_memobj.c
@@ -146,10 +149,8 @@ SET(SDK_LIB_SOURCES
     ${SDK_LIB_DIR}util/nrf_assert.c
     ${SDK_LIB_DIR}util/app_util_platform.c
     ${SDK_MOD_DIR}hal/nrf_nvmc.c
+    ${SDK_MOD_DIR}drivers/src/prs/nrfx_prs.c
     ${SDK_DIR}/external/utf_converter/utf.c
-    ${SDK_DIR}/integration/nrfx/legacy/nrf_drv_rng.c
-    ${SDK_DIR}/integration/nrfx/legacy/nrf_drv_twi.c
-    ${SDK_DIR}/integration/nrfx/legacy/nrf_drv_ppi.c
     )
 
 SET(SDK_BOOT_SOURCES
@@ -323,6 +324,7 @@ SET(SDK_BLE_SOURCES
     )
 
 AUX_SOURCE_DIRECTORY(${SDK_MOD_DIR}drivers/src/ SDK_MOD_DRV_SOURCES)
+AUX_SOURCE_DIRECTORY(${SDK_DIR}/integration/nrfx/legacy/ SDK_LEGACY_SOURCES)
 AUX_SOURCE_DIRECTORY(${SDK_DIR}/external/fprintf SDK_EXT_FPRINTF_SOURCES)
 	
 set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")

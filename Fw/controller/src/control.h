@@ -10,9 +10,8 @@
 typedef enum {
     CE_BT_CONN = 0x0001,
     CE_BATT_IN = 0x0002, // Battery measurement complete
-    CE_CFGCHG = 0x0004, // Config changed - reload timer and servos
     CE_DELALL = 0x0008, // Delete all records
-    CE_OLEDVAL = 0x0010, // Write value to OLED
+    CE_TOUCH = 0x0010, // Screen touched
 } ControlEventType;
 
 typedef struct {

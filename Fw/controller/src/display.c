@@ -12,6 +12,7 @@
 #include "nrf.h"
 #include "nrf_gfx.h"
 #include "nrf_delay.h"
+#include "nrf_log.h"
 #include "display.h"
 
 #define GRAY            0xC618
@@ -59,11 +60,18 @@ static void line_draw(void)
     }
 }
 
+static void DispTouch(const ControlEvent* pEvt) {
+    uint16_t *pos = pEvt->ptr16;
+    NRF_LOG_INFO("Disp %d %d", pos[0], pos[1]);
+    DispCursor(pos[0], pos[1]);
+}
+
 void DisplayInit(void)
 {
     nrf_gpio_cfg_output(ILI9341_RES_PIN);
     nrf_gpio_pin_set(ILI9341_RES_PIN);
     APP_ERROR_CHECK(nrf_gfx_init(p_lcd));
+    ControlRegisterCb(CE_TOUCH, DispTouch);
 }
 
 void DispTest(void) {

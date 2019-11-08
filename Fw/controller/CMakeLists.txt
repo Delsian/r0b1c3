@@ -30,9 +30,7 @@ SET(SOURCE_FILES
 	src/r3_service.c
     src/touchscreen.c
     src/display.c
-    ${SDK_DIR}/components/drivers_ext/ili9341/ili9341.c
-    ${SDK_DIR}/external/thedotfactory_fonts/orkney8pts.c
-    ${SDK_DIR}/external/thedotfactory_fonts/orkney24pts.c
+    src/ili9341.c
 	)
 
 SET(COMPILE_DEFINITIONS_DEBUG -O0 -g3 -DDEBUG)

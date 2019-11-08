@@ -16,7 +16,7 @@ static tCustomServiceVars tR3Device;
 
 static void InitComplete() {
     TouchInit();
-    //DisplayInit();
+    DispTest();
 }
 
 const tCustomService tServDev = {

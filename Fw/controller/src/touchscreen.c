@@ -15,10 +15,10 @@
 #include "app_timer.h"
 
 #define TOUCH_MEAS_INTERVAL     APP_TIMER_TICKS(100)
-#define DEF_DX 150
-#define DEF_MX 256
-#define DEF_DY 150
-#define DEF_MY 256
+#define DEF_DX 120
+#define DEF_MX 120
+#define DEF_DY 700
+#define DEF_MY -140
 
 static nrf_saadc_value_t     m_buffer[2];
 APP_TIMER_DEF(m_adc_timer_id);

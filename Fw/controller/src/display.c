@@ -20,7 +20,11 @@
 #define BLUE            0x001F
 
 static void DispCursor(uint16_t x, uint16_t y) {
-    ili9341_rect_draw( x, y, x+3, y+3, RED);
+    static uint16_t ox, oy;
+    ili9341_rect_draw( ox, oy, 8, 8, GRAY);
+    ili9341_rect_draw( x, y, 8, 8, RED);
+    ox = x;
+    oy = y;
 }
 
 static void DispTouch(const ControlEvent* pEvt) {

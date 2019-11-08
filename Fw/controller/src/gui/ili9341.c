@@ -44,6 +44,7 @@
 #include "nrf_delay.h"
 #include "nrf_gpio.h"
 #include "boards.h"
+#include "ili9341.h"
 
 // Set of commands described in ILI9341 datasheet.
 #define ILI9341_NOP         0x00
@@ -290,7 +291,7 @@ ret_code_t ili9341_init(void)
     return err_code;
 }
 
-void ili9341_pixel_draw(uint16_t x, uint16_t y, uint32_t color)
+void ili9341_pixel_draw(uint16_t x, uint16_t y, uint16_t color)
 {
     set_addr_window(x, y, x, y);
 
@@ -303,7 +304,7 @@ void ili9341_pixel_draw(uint16_t x, uint16_t y, uint32_t color)
     nrf_gpio_pin_clear(ILI9341_DC_PIN);
 }
 
-void ili9341_rect_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint32_t color)
+void ili9341_rect_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color)
 {
     set_addr_window(x, y, x + width - 1, y + height - 1);
 
@@ -333,6 +334,43 @@ void ili9341_rect_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, 
                 spi_write(data, sizeof(data));
         case 1:
                 spi_write(data, sizeof(data));
+            } while (--i > 0);
+        default:
+            break;
+    }
+/*lint -restore */
+
+    nrf_gpio_pin_clear(ILI9341_DC_PIN);
+}
+
+void ili9341_sprite_draw(uint16_t x, uint16_t y, tSprite *s) {
+    set_addr_window(x, y, x + s->width - 1, y + s->height - 1);
+
+    nrf_gpio_pin_set(ILI9341_DC_PIN);
+    uint16_t *data = s->img;
+
+    // Duff's device algorithm for optimizing loop.
+    uint32_t i = (s->height * s->width + 7) / 8;
+
+/*lint -save -e525 -e616 -e646 */
+    switch ((s->height * s->width) % 8) {
+        case 0:
+            do {
+                spi_write(data++, sizeof(uint16_t));
+        case 7:
+                spi_write(data++, sizeof(uint16_t));
+        case 6:
+                spi_write(data++, sizeof(uint16_t));
+        case 5:
+                spi_write(data++, sizeof(uint16_t));
+        case 4:
+                spi_write(data++, sizeof(uint16_t));
+        case 3:
+                spi_write(data++, sizeof(uint16_t));
+        case 2:
+                spi_write(data++, sizeof(uint16_t));
+        case 1:
+                spi_write(data++, sizeof(uint16_t));
             } while (--i > 0);
         default:
             break;

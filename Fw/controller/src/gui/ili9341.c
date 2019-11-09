@@ -121,6 +121,20 @@
 
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(ILI9341_SPI_INSTANCE);
 
+// 16 colors
+static tColor DisplayBuffer[ILI9341_WIDTH * ILI9341_HEIGHT / 2];
+
+static uint16_t getColor(uint8_t c) {
+    static uint16_t const ctable[] = {
+            0x0000, 0xF800, 0x001F, 0x07e0, // black, red, blue, green
+            0xC618, 0xffe0, 0xffff, 0x780F,  // gray yellow white purple
+            0,0,0,0,
+            0,0,0,
+            0 // Transparent
+    };
+    return (ctable[c]);
+}
+
 static inline void spi_write(const void * data, size_t size)
 {
     APP_ERROR_CHECK(nrf_drv_spi_transfer(&spi, data, size, NULL, 0));
@@ -280,6 +294,9 @@ ret_code_t ili9341_init(void)
 {
     ret_code_t err_code;
 
+    nrf_gpio_cfg_output(ILI9341_RES_PIN);
+    nrf_gpio_pin_set(ILI9341_RES_PIN);
+
     err_code = hardware_init();
     if (err_code != NRF_SUCCESS)
     {
@@ -291,99 +308,47 @@ ret_code_t ili9341_init(void)
     return err_code;
 }
 
-void ili9341_pixel_draw(uint16_t x, uint16_t y, uint16_t color)
-{
-    set_addr_window(x, y, x, y);
-
-    const uint8_t data[2] = {color >> 8, color};
-
+void ClearDisplay(void) {
+    set_addr_window(0, 0, ILI9341_WIDTH - 1, ILI9341_HEIGHT - 1);
+    const uint16_t data  = 0;
     nrf_gpio_pin_set(ILI9341_DC_PIN);
-
-    spi_write(data, sizeof(data));
-
-    nrf_gpio_pin_clear(ILI9341_DC_PIN);
-}
-
-void ili9341_rect_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color)
-{
-    set_addr_window(x, y, x + width - 1, y + height - 1);
-
-    const uint8_t data[2] = {color >> 8, color};
-
-    nrf_gpio_pin_set(ILI9341_DC_PIN);
-
-    // Duff's device algorithm for optimizing loop.
-    uint32_t i = (height * width + 7) / 8;
-
-/*lint -save -e525 -e616 -e646 */
-    switch ((height * width) % 8) {
-        case 0:
-            do {
-                spi_write(data, sizeof(data));
-        case 7:
-                spi_write(data, sizeof(data));
-        case 6:
-                spi_write(data, sizeof(data));
-        case 5:
-                spi_write(data, sizeof(data));
-        case 4:
-                spi_write(data, sizeof(data));
-        case 3:
-                spi_write(data, sizeof(data));
-        case 2:
-                spi_write(data, sizeof(data));
-        case 1:
-                spi_write(data, sizeof(data));
-            } while (--i > 0);
-        default:
-            break;
+    for(int i = 0; i<ILI9341_WIDTH * ILI9341_HEIGHT; i++) {
+        spi_write(&data, sizeof(data));
     }
-/*lint -restore */
-
-    nrf_gpio_pin_clear(ILI9341_DC_PIN);
+    memset((void *)DisplayBuffer, 0, sizeof(DisplayBuffer));
 }
 
-void ili9341_sprite_draw(uint16_t x, uint16_t y, tSprite *s) {
-    set_addr_window(x, y, x + s->width - 1, y + s->height - 1);
+
+static void SpritePaint(uint16_t x, uint16_t y, tSprite *s, tColor *data) {
+    uint16_t sbuffer[2];
+    set_addr_window((x*2), y, (x*2) + s->width - 1, y + s->height - 1);
 
     nrf_gpio_pin_set(ILI9341_DC_PIN);
-    uint16_t *data = s->img;
 
-    // Duff's device algorithm for optimizing loop.
-    uint32_t i = (s->height * s->width + 7) / 8;
-
-/*lint -save -e525 -e616 -e646 */
-    switch ((s->height * s->width) % 8) {
-        case 0:
-            do {
-                spi_write(data++, sizeof(uint16_t));
-        case 7:
-                spi_write(data++, sizeof(uint16_t));
-        case 6:
-                spi_write(data++, sizeof(uint16_t));
-        case 5:
-                spi_write(data++, sizeof(uint16_t));
-        case 4:
-                spi_write(data++, sizeof(uint16_t));
-        case 3:
-                spi_write(data++, sizeof(uint16_t));
-        case 2:
-                spi_write(data++, sizeof(uint16_t));
-        case 1:
-                spi_write(data++, sizeof(uint16_t));
-            } while (--i > 0);
-        default:
-            break;
+    for(int i = 0; i< (s->width*s->height/2); i++) {
+        sbuffer[0] = getColor(data[i].p1);
+        sbuffer[1] = getColor(data[i].p2);
+        spi_write(sbuffer, sizeof(uint16_t)*2);
     }
-/*lint -restore */
 
-    nrf_gpio_pin_clear(ILI9341_DC_PIN);
+    //nrf_gpio_pin_clear(ILI9341_DC_PIN);
 }
 
-void ili9341_dummy_display(void)
-{
-    /* No implementation needed. */
+void SpriteClear(uint16_t x, uint16_t y, tSprite *s) {
+    if (s->bg)
+        SpritePaint(x, y, s, s->bg);
 }
+
+void SpriteDraw(uint16_t x, uint16_t y, tSprite *s) {
+    tColor* bg = s->bg;
+    for(int i = x; i<(x+(s->width/2)); i++) {
+        for(int j = y; j<(y+s->height); j++) {
+            *bg = DisplayBuffer[x + ILI9341_WIDTH * y];
+        }
+    }
+    SpritePaint(x, y, s, s->img);
+}
+
 
 /*
 void ili9341_rotation_set(nrf_lcd_rotation_t rotation)
@@ -408,8 +373,6 @@ void ili9341_rotation_set(nrf_lcd_rotation_t rotation)
 }
 */
 
-void ili9341_display_invert(bool invert)
-{
-    write_command(invert ? ILI9341_INVON : ILI9341_INVOFF);
-}
+void ili9341_set_color_table(uint16_t* buf, uint8_t len) {
 
+}

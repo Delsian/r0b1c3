@@ -15,19 +15,16 @@ typedef struct {
 } __attribute__((packed)) tColor;
 
 typedef struct {
-    uint16_t width;
+    uint16_t width; // !!! width in two-pixel size !!!
     uint16_t height;
     tColor *img;
     tColor *bg; // mem area to keep background
 } __attribute__((packed)) tSprite;
 
 ret_code_t ili9341_init(void);
-void ClearDisplay(void);
-void SpriteDraw(uint16_t x, uint16_t y, tSprite *s);
-void SpriteClear(uint16_t x, uint16_t y, tSprite *s);
-
-void ili9341_rect_draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t color);
-
-void ili9341_set_color_table(uint16_t* buf, uint8_t len);
+void ClearDisplayWithBg(void);
+void SpriteDraw(uint16_t xdiv2, uint16_t y, tSprite *s);
+void SpriteClear(uint16_t xdiv2, uint16_t y, tSprite *s);
+void SetColorTable(const uint16_t* buf);
 
 #endif /* ILI9341_H_ */

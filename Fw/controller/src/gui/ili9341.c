@@ -122,17 +122,18 @@
 static const nrf_drv_spi_t spi = NRF_DRV_SPI_INSTANCE(ILI9341_SPI_INSTANCE);
 
 // 16 colors
-static tColor DisplayBuffer[ILI9341_WIDTH * ILI9341_HEIGHT / 2];
+static tColor DisplayBuffer[(ILI9341_WIDTH/2) * ILI9341_HEIGHT];
+static const uint16_t* pColorTable;
+static uint16_t const defColorTable[16] = {
+        0x0000, 0xF800, 0x001F, 0x07e0, // black, red, blue, green
+        0xC618, 0xffe0, 0x87E0, 0x780F,  // gray yellow lime purple
+        0xFCA0, 0xF81F, 0x07FF, 0xF97F, // orange magenta cyan pink
+        0x000F, 0x7800, 0xFFFF, // navy maroon white
+        0 // Last color reserved for Transparent
+};
 
 static uint16_t getColor(uint8_t c) {
-    static uint16_t const ctable[] = {
-            0x0000, 0xF800, 0x001F, 0x07e0, // black, red, blue, green
-            0xC618, 0xffe0, 0xffff, 0x780F,  // gray yellow white purple
-            0,0,0,0,
-            0,0,0,
-            0 // Transparent
-    };
-    return (ctable[c]);
+    return (pColorTable[c]);
 }
 
 static inline void spi_write(const void * data, size_t size)
@@ -150,6 +151,14 @@ static inline void write_data(uint8_t c)
 {
     nrf_gpio_pin_set(ILI9341_DC_PIN);
     spi_write(&c, sizeof(c));
+}
+
+static inline void write_2color(tColor c)
+{
+    static uint16_t pixels[2];
+    pixels[0] = getColor(c.p1);
+    pixels[1] = getColor(c.p2);
+    spi_write(pixels, 4);
 }
 
 static void set_addr_window(uint16_t x_0, uint16_t y_0, uint16_t x_1, uint16_t y_1)
@@ -305,33 +314,29 @@ ret_code_t ili9341_init(void)
 
     command_list();
 
+    pColorTable = defColorTable;
+    memset((void *)DisplayBuffer, 0, sizeof(DisplayBuffer));
+    memset((void *)(DisplayBuffer+9000), 0x55, 40); // bg test
     return err_code;
 }
 
-void ClearDisplay(void) {
+void ClearDisplayWithBg(void) {
     set_addr_window(0, 0, ILI9341_WIDTH - 1, ILI9341_HEIGHT - 1);
-    const uint16_t data  = 0;
     nrf_gpio_pin_set(ILI9341_DC_PIN);
-    for(int i = 0; i<ILI9341_WIDTH * ILI9341_HEIGHT; i++) {
-        spi_write(&data, sizeof(data));
+    for(int i = 0; i<(ILI9341_WIDTH/2) * ILI9341_HEIGHT; i++) {
+        write_2color(DisplayBuffer[i]);
     }
-    memset((void *)DisplayBuffer, 0, sizeof(DisplayBuffer));
 }
 
 
-static void SpritePaint(uint16_t x, uint16_t y, tSprite *s, tColor *data) {
-    uint16_t sbuffer[2];
-    set_addr_window((x*2), y, (x*2) + s->width - 1, y + s->height - 1);
+static void SpritePaint(uint16_t xdiv2, uint16_t y, tSprite *s, tColor *data) {
+    set_addr_window((xdiv2*2), y, (xdiv2 * 2) + (s->width*2) - 1, y + s->height - 1);
 
     nrf_gpio_pin_set(ILI9341_DC_PIN);
 
-    for(int i = 0; i< (s->width*s->height/2); i++) {
-        sbuffer[0] = getColor(data[i].p1);
-        sbuffer[1] = getColor(data[i].p2);
-        spi_write(sbuffer, sizeof(uint16_t)*2);
+    for(int i = 0; i< (s->width*s->height); i++) {
+        write_2color(data[i]);
     }
-
-    //nrf_gpio_pin_clear(ILI9341_DC_PIN);
 }
 
 void SpriteClear(uint16_t x, uint16_t y, tSprite *s) {
@@ -341,9 +346,10 @@ void SpriteClear(uint16_t x, uint16_t y, tSprite *s) {
 
 void SpriteDraw(uint16_t x, uint16_t y, tSprite *s) {
     tColor* bg = s->bg;
-    for(int i = x; i<(x+(s->width/2)); i++) {
-        for(int j = y; j<(y+s->height); j++) {
-            *bg = DisplayBuffer[x + ILI9341_WIDTH * y];
+    for(int j = y; j<(y+s->height); j++) {
+        for(int i = x; i<(x+s->width); i++) {
+            *bg = DisplayBuffer[i + ILI9341_WIDTH/2 * j];
+            bg++;
         }
     }
     SpritePaint(x, y, s, s->img);
@@ -373,6 +379,6 @@ void ili9341_rotation_set(nrf_lcd_rotation_t rotation)
 }
 */
 
-void ili9341_set_color_table(uint16_t* buf, uint8_t len) {
-
+void ili9341_set_color_table(const uint16_t* buf) {
+    pColorTable = buf;
 }

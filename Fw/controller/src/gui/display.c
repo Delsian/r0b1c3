@@ -19,7 +19,7 @@
 #define RED             0xF800
 #define BLUE            0x001F
 
-tColor const img[32] = {
+tColor const img[48] = {
         {2,2}, {2,2}, {2,1}, {1,1},
         {1,2}, {2,1}, {1,1}, {1,1},
         {1,1}, {1,1}, {1,1}, {1,1},
@@ -27,17 +27,34 @@ tColor const img[32] = {
         {1,1}, {1,1}, {1,1}, {1,1},
         {1,1}, {1,1}, {1,1}, {1,7},
         {1,1}, {1,1}, {3,4}, {5,6},
-        {1,1}, {1,1}, {1,1}, {1,1}
+        {1,1}, {1,1}, {1,1}, {1,1},
+        {1,1}, {1,1}, {1,1}, {1,1},
+        {1,1}, {1,1}, {1,1}, {1,1},
+        {1,1}, {1,1}, {1,1}, {1,1},
+        {1,1}, {1,1}, {1,1}, {1,7},
         };
 
 tSprite arrow = {
-        .width = 8,
-        .height = 8,
+        .width = 4,
+        .height = 12,
         .img = img
 };
 
 static void DispCursor(uint16_t x, uint16_t y) {
     static uint16_t ox, oy;
+
+    if (x>0x7FFF) { // negative pos
+        x = 0;
+    }
+    if (y>0x7FFF) { // negative pos
+        y = 0;
+    }
+    if ((x+arrow.width)>=(ILI9341_WIDTH/2)) { // right border
+        x = (ILI9341_WIDTH/2)-1-arrow.width;
+    }
+    if ((y+arrow.height)>=(ILI9341_HEIGHT)) { // bottom border
+        y = ILI9341_HEIGHT-1-arrow.height;
+    }
     SpriteClear( ox, oy, &arrow);
     SpriteDraw( x, y, &arrow);
     ox = x;
@@ -57,8 +74,8 @@ void DisplayInit(void)
 }
 
 void DispTest(void) {
-    static tColor bg[32];
-    ClearDisplay();
+    static tColor bg[48];
+    ClearDisplayWithBg();
     arrow.bg = bg;
-    DispCursor(150, 150);
+    DispCursor(70, 150);
 }

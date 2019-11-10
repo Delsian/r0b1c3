@@ -28,9 +28,9 @@ SET(SOURCE_FILES
 	src/custom_service.c
 	src/control.c
 	src/r3_service.c
-    src/touchscreen.c
-    src/display.c
-    src/ili9341.c
+    src/gui/touchscreen.c
+    src/gui/display.c
+    src/gui/ili9341.c
 	)
 
 SET(COMPILE_DEFINITIONS_DEBUG -O0 -g3 -DDEBUG)
@@ -44,6 +44,7 @@ INCLUDE_DIRECTORIES(
 	${SDK_BOOT_INCLUDE_DIRS}
 	${SDK_CRYPTO_INCLUDE_DIRS}
 	./src
+	./src/gui
 	../config
 	)
 

@@ -1,0 +1,6 @@
+[submodule "Fw/lvgl"]
+	path = Fw/lvgl
+	url = https://github.com/littlevgl/lvgl.git
+[submodule "Utils/Pythonista-Pixel-Editor"]
+	path = Utils/Pythonista-Pixel-Editor
+	url = git@github.com:Delsian/Pythonista-Pixel-Editor.git

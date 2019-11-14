@@ -25,6 +25,7 @@ INCLUDE("../config/SDK.cmake")
 SET(SOURCE_FILES
 	src/main.c
 	src/bluetooth.c
+	src/bonding.c
 	src/custom_service.c
 	src/control.c
 	src/r3_service.c

@@ -79,6 +79,7 @@ SET(SDK_BLE_INCLUDE_DIRS
 	${SDK_BLE_DIR}ble_services/ble_escs
 	${SDK_BLE_DIR}ble_services/ble_lbs
 	${SDK_BLE_DIR}ble_services/ble_nus
+	${SDK_BLE_DIR}ble_services/nrf_ble_bms
 	${SDK_BLE_DIR}common
 	${SDK_BLE_DIR}nrf_ble_gatt
 	${SDK_BLE_DIR}nrf_ble_gq
@@ -125,7 +126,7 @@ SET(SDK_LIB_SOURCES
     ${SDK_LIB_DIR}crc16/crc16.c
     ${SDK_LIB_DIR}crc32/crc32.c
     ${SDK_LIB_DIR}experimental_section_vars/nrf_section_iter.c
-    #${SDK_LIB_DIR}fds/fds.c
+    ${SDK_LIB_DIR}fds/fds.c
     ${SDK_LIB_DIR}fstorage/nrf_fstorage.c
     ${SDK_LIB_DIR}fstorage/nrf_fstorage_nvmc.c
     ${SDK_LIB_DIR}fstorage/nrf_fstorage_sd.c
@@ -315,6 +316,18 @@ SET(SDK_BLE_SOURCES
     ${SDK_BLE_DIR}ble_services/ble_dfu/ble_dfu_unbonded.c
     ${SDK_BLE_DIR}ble_services/ble_dis/ble_dis.c
     ${SDK_BLE_DIR}ble_services/ble_nus/ble_nus.c
+    ${SDK_BLE_DIR}ble_services/nrf_ble_bms/nrf_ble_bms.c
+    ${SDK_BLE_DIR}peer_manager/gatt_cache_manager.c
+    ${SDK_BLE_DIR}peer_manager/gatts_cache_manager.c
+    ${SDK_BLE_DIR}peer_manager/id_manager.c
+    ${SDK_BLE_DIR}peer_manager/peer_database.c
+    ${SDK_BLE_DIR}peer_manager/peer_data_storage.c
+    ${SDK_BLE_DIR}peer_manager/peer_id.c
+    ${SDK_BLE_DIR}peer_manager/peer_manager.c
+    ${SDK_BLE_DIR}peer_manager/peer_manager_handler.c
+    ${SDK_BLE_DIR}peer_manager/pm_buffer.c
+    ${SDK_BLE_DIR}peer_manager/security_dispatcher.c
+    ${SDK_BLE_DIR}peer_manager/security_manager.c
     ${SDK_SD_DIR}../common/nrf_sdh.c
     ${SDK_SD_DIR}../common/nrf_sdh_ble.c
     ${SDK_SD_DIR}../common/nrf_sdh_soc.c

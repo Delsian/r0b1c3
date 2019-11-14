@@ -19,9 +19,11 @@
 #include "nrf_pwr_mgmt.h"
 #include "custom_service.h"
 #include "nrf_dfu_types.h"
+#include "peer_manager_handler.h"
+#include "bonding.h"
 
 #define MANUFACTURER_NAME "EugKrashtan"
-#define MODEL_NAME "r0b1c-v1"
+#define MODEL_NAME "R3"
 #define HW_REVISION_STR "00.00.01"
 
 #define APP_BLE_OBSERVER_PRIO           2
@@ -121,6 +123,13 @@ static ble_gap_adv_data_t m_adv_data =
     }
 };
 
+void advertising_start(bool erase_bonds) {
+    if (erase_bonds == true)
+        delete_bonds();
+    else
+        sd_ble_gap_adv_start(m_adv_handle, APP_BLE_CONN_CFG_TAG);
+}
+
 static void advertising_init(void)
 {
     ble_uuid_t adv_uuids[] = {
@@ -188,6 +197,9 @@ static void gap_params_init(void)
 static void ble_evt_handler(const ble_evt_t * p_ble_evt, void * p_context)
 {
     ret_code_t err_code;
+    NRF_LOG_INFO("Ble evt %d", p_ble_evt->header.evt_id);
+
+    pm_handler_secure_on_connection(p_ble_evt);
 
     NRF_LOG_DEBUG("Ble evt %x",p_ble_evt->header.evt_id);
     switch (p_ble_evt->header.evt_id)
@@ -196,14 +208,16 @@ static void ble_evt_handler(const ble_evt_t * p_ble_evt, void * p_context)
         	NRF_LOG_INFO("Connected");
             // call on connect
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+            bms_on_connect(m_conn_handle);
             break;
 
         case BLE_GAP_EVT_DISCONNECTED:
         	NRF_LOG_INFO("Disconnected");
+        	delete_disconnected_bonds();
             m_conn_handle = BLE_CONN_HANDLE_INVALID;
-            sd_ble_gap_adv_start(m_adv_handle, APP_BLE_CONN_CFG_TAG);
+            //sd_ble_gap_adv_start(m_adv_handle, APP_BLE_CONN_CFG_TAG);
             break;
-
+#if 0
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
             // Pairing not supported
             err_code = sd_ble_gap_sec_params_reply(m_conn_handle,
@@ -212,8 +226,8 @@ static void ble_evt_handler(const ble_evt_t * p_ble_evt, void * p_context)
                                                    NULL);
             APP_ERROR_CHECK(err_code);
             break;
-
-#ifndef S140
+#endif
+//#ifndef S140
         case BLE_GAP_EVT_PHY_UPDATE_REQUEST:
         {
         	NRF_LOG_INFO("PHY update request");
@@ -225,7 +239,7 @@ static void ble_evt_handler(const ble_evt_t * p_ble_evt, void * p_context)
             err_code = sd_ble_gap_phy_update(p_ble_evt->evt.gap_evt.conn_handle, &phys);
             APP_ERROR_CHECK(err_code);
         } break;
-#endif
+//#endif
 
         case BLE_GATTS_EVT_SYS_ATTR_MISSING:
             // No system attributes have been stored.
@@ -248,7 +262,7 @@ static void ble_evt_handler(const ble_evt_t * p_ble_evt, void * p_context)
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
             APP_ERROR_CHECK(err_code);
             break;
-
+#if 0
         case BLE_EVT_USER_MEM_REQUEST:
             err_code = sd_ble_user_mem_reply(p_ble_evt->evt.gattc_evt.conn_handle, NULL);
             APP_ERROR_CHECK(err_code);
@@ -282,7 +296,7 @@ static void ble_evt_handler(const ble_evt_t * p_ble_evt, void * p_context)
                 }
             }
         } break; // BLE_GATTS_EVT_RW_AUTHORIZE_REQUEST
-
+#endif
         default:
             // No implementation needed.
             break;
@@ -335,6 +349,8 @@ static void services_init(void)
 
     err_code = ble_dis_init(&dis_init);
     APP_ERROR_CHECK(err_code);
+
+    bond_management_init();
 }
 
 static void on_conn_params_evt(ble_conn_params_evt_t * p_evt)
@@ -384,6 +400,7 @@ void ble_stack_init()
 
     services_init();
     advertising_init();
+    peer_manager_init();
 
     // Conn params
     memset(&cp_init, 0, sizeof(cp_init));
@@ -398,7 +415,7 @@ void ble_stack_init()
     err_code = ble_conn_params_init(&cp_init);
     APP_ERROR_CHECK(err_code);
 
-    sd_ble_gap_adv_start(m_adv_handle, APP_BLE_CONN_CFG_TAG);
+    advertising_start(true);
 
     // Call after service initialization (set callbacks etc)
     if (gtServices.initCompl) {
